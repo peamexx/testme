@@ -1,38 +1,37 @@
 import './index.css';
-import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, Outlet, RouterProvider, useNavigate } from "react-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import App from './App.tsx';
 import Join from './components/join/Join.tsx';
 import Login from './components/login/Login.tsx';
 import MessageList from './components/list/MessageList.tsx';
-import { userStore } from './store/UserStore.tsx';
 
 const ProtectedLoginLayout = () => {
   const navigate = useNavigate();
-  const user = userStore((state) => state.user);
+  const auth = getAuth();
 
-  useEffect(() => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       navigate('/');
     }
-  }, [user, navigate]);
+  });
 
-  return user ? null : <Outlet />;
+  return <Outlet />;
 }
 
 const ProtectedLayout = () => {
   const navigate = useNavigate();
-  const user = userStore((state) => state.user);
+  const auth = getAuth();
 
-  useEffect(() => {
+  onAuthStateChanged(auth, (user) => {
     if (!user) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  });
 
-  return user ? <Outlet /> : null;
+  return <Outlet />;
 }
 
 let router = createBrowserRouter([
