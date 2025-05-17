@@ -37,7 +37,7 @@ export default function Login() {
         const res = await signInWithEmailAndPassword(auth, data.email, password);
         console.log(res);
 
-        login(data.email, () => {
+        login({ id: id, email: data.email }, () => {
           setTimeout(() => {
             navigate('/');
           }, 500);

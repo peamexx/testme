@@ -4,14 +4,8 @@ export default function UseAuth() {
   const createUser = userStore((state) => state.create);
   const deleteUser = userStore((state) => state.delete);
 
-  const login = (email: string, callback: () => void) => {
-    if (!email) {
-      return;
-    }
-    
-    createUser({
-      email: email,
-    });
+  const login = (userData: any, callback: () => void) => {
+    createUser(userData);
 
     if (callback) {
       callback();

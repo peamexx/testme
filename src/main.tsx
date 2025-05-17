@@ -5,11 +5,16 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import App from './App.tsx';
 import Join from './components/join/Join.tsx';
 import Login from './components/login/Login.tsx';
+import MessageList from './components/list/MessageList.tsx';
 
 let router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/list",
+    element: <MessageList />,
   },
   {
     path: "/join",

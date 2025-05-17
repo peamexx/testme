@@ -35,7 +35,7 @@ export default function Join() {
         email: user.email,
       });
 
-      login(user.email ? user.email : '', () => {
+      login({ id: id, email: user.email }, () => {
         setTimeout(() => {
           navigate('/');
         }, 500);

@@ -9,9 +9,10 @@ function App() {
   const user = userStore((state) => state.user);
 
   useEffect(() => {
-    console.log(user);
     if (!user) {
-      navigate("/login");
+      navigate('/login');
+    } else {
+      navigate('/list')
     }
   }, [user])
 
