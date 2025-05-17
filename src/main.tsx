@@ -1,11 +1,39 @@
 import './index.css';
+import { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Outlet, RouterProvider, useNavigate } from "react-router";
 
 import App from './App.tsx';
 import Join from './components/join/Join.tsx';
 import Login from './components/login/Login.tsx';
 import MessageList from './components/list/MessageList.tsx';
+import { userStore } from './store/UserStore.tsx';
+
+const ProtectedLoginLayout = () => {
+  const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  return user ? null : <Outlet />;
+}
+
+const ProtectedLayout = () => {
+  const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  return user ? <Outlet /> : null;
+}
 
 let router = createBrowserRouter([
   {
@@ -14,7 +42,10 @@ let router = createBrowserRouter([
   },
   {
     path: "/list",
-    element: <MessageList />,
+    element: <ProtectedLayout />,
+    children: [
+      { path: '', element: <MessageList /> }
+    ]
   },
   {
     path: "/join",
@@ -22,7 +53,10 @@ let router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <ProtectedLoginLayout />,
+    children: [
+      { path: '', element: <Login /> }
+    ]
   },
 ]);
 
