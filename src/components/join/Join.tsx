@@ -1,11 +1,17 @@
 import './Join.css';
-import { useEffect, useState } from 'react';
-import { db } from '../../firebase';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
+import { db } from '../../firebase';
+import { userStore } from '../../store/UserStore';
+
 export default function Join() {
   const auth = getAuth();
+  const navigate = useNavigate();
+  const createUser = userStore((state) => state.create);
+
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [company, setCompany] = useState('');
@@ -24,12 +30,18 @@ export default function Join() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, `${id}@${company}.com`, password);
       const user = userCredential.user;
-      console.log(user);
-      console.log(db);
 
       await setDoc(doc(db, 'member', id), {
         email: user.email,
       });
+
+      createUser({
+        email: user.email,
+      });
+
+      setTimeout(() => {
+        navigate('/');
+      }, 500);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;

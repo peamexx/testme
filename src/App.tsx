@@ -1,15 +1,21 @@
-// import { useState } from 'react'
-import { Login } from './components/login';
-import { Join } from './components/join';
 import './App.css'
+import { useEffect } from 'react';
+import { useNavigate } from "react-router";
+
+import { userStore } from './store/UserStore';
 
 function App() {
-  return (
-    <>
-      <Join />
-      <Login />
-    </>
-  )
+  const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+
+  useEffect(() => {
+    console.log(user);
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user])
+
+  return (<></>)
 }
 
 export default App
