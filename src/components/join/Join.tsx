@@ -5,12 +5,12 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 import { db } from '../../firebase';
-import { userStore } from '../../store/UserStore';
+import UseAuth from '../../hooks/UseAuth';
 
 export default function Join() {
   const auth = getAuth();
   const navigate = useNavigate();
-  const createUser = userStore((state) => state.create);
+  const { login } = UseAuth();
 
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -35,13 +35,11 @@ export default function Join() {
         email: user.email,
       });
 
-      createUser({
-        email: user.email,
-      });
-
-      setTimeout(() => {
-        navigate('/');
-      }, 500);
+      login(user.email ? user.email : '', () => {
+        setTimeout(() => {
+          navigate('/');
+        }, 500);
+      })
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;

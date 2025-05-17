@@ -5,12 +5,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { db } from '../../firebase';
-import { userStore } from '../../store/UserStore';
+import UseAuth from '../../hooks/UseAuth';
 
 export default function Login() {
   const auth = getAuth();
   const navigate = useNavigate();
-  const createUser = userStore((state) => state.create);
+  const { login } = UseAuth();
 
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -37,13 +37,11 @@ export default function Login() {
         const res = await signInWithEmailAndPassword(auth, data.email, password);
         console.log(res);
 
-        createUser({
-          email: data.email,
-        });
-
-        setTimeout(() => {
-          navigate('/');
-        }, 500);
+        login(data.email, () => {
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
+        })
       }
     } catch (error: any) {
       const errorCode = error.code;
