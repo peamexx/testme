@@ -4,11 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from '../../firebase';
 import { userStore } from '../../store/UserStore';
 
-interface Props {
-  onUpdate: () => void;
-}
-
-export default function SendInput(props: Props) {
+export default function SendInput() {
   const user = userStore((state) => state.user);
 
   const [val, setVal] = useState('');
@@ -23,8 +19,6 @@ export default function SendInput(props: Props) {
         userId: user.id,
         createTime: new Date().toISOString()
       });
-
-      props.onUpdate();
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
